@@ -1,15 +1,12 @@
-
 /*
 * generate configuration for webpack
 */
 
 const path = require('path');
 
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-
 const basePath = __dirname + '/../../';
 
-let  compile = {
+let compile = {
     mode: 'development',
     devServer: {
         contentBase: path.join(basePath, "assets"),
@@ -21,33 +18,19 @@ let  compile = {
     module: {
         rules: [
             {
-                test: /\.vue$/,
-                loader: "vue-loader"
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: ['babel-loader']
             },
-            {
-                test: /\.(scss|css)$/,
-                use: ["vue-style-loader", "css-loader", "sass-loader"]
-            },
-            {
-                test: /\.js$/,
-                loader: "babel-loader",
-                exclude: /node_modules/
-            }
         ]
     },
-    plugins: [
-        new VueLoaderPlugin()
-    ],
-	 resolve: {
-        alias: {
-            vue: 'vue/dist/vue.js'
-        },
+    resolve: {
+        extensions: ['*', '.js', '.jsx'],
     },
 };
 
 
-
-class PluginMasterVueConfig {
+class PluginMasterReactConfig {
 
     webpackConfig = [];
 
@@ -56,7 +39,7 @@ class PluginMasterVueConfig {
         this.basePath = basePath;
     }
 
-    getConfig(customConfig){
+    getConfig(customConfig) {
 
         customConfig.forEach(item => {
 
@@ -82,4 +65,4 @@ class PluginMasterVueConfig {
 
 }
 
-module.exports = new PluginMasterVueConfig(compile, basePath)
+module.exports = new PluginMasterReactConfig(compile, basePath)
