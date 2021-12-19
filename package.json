@@ -1,4 +1,9 @@
 {
   "name": "plugin-master-js-build",
-  "version": "1.0.3"
+  "version": "1.0.4",
+   "devDependencies": {
+    "@vitejs/plugin-vue": "^1.9.2", 
+    "vite": "^2.6.1",
+    "vite-plugin-live-reload": "^2.1.0", 
+  }
 }
