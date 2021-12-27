@@ -4,6 +4,6 @@
    "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.2", 
     "vite": "^2.6.1",
-    "vite-plugin-live-reload": "^2.1.0", 
+    "vite-plugin-live-reload": "^2.1.0" 
   }
 }

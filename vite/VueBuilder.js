@@ -1,14 +1,17 @@
-import {defineConfig} from 'vite'
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
-import liveReload from 'vite-plugin-live-reload'
+
+let {defineConfig} = require("vite")
+
+let vue = require("@vitejs/plugin-vue")
+
+let path = require('path');
+let liveReload = require('vite-plugin-live-reload');
 
 
-const basePath = __dirname + '/../../';
+const basePath = __dirname + '/../../../';
 
-const config = defineConfig({
+const config = {
     plugins: [
-        vue()
+      vue()
     ],
     // config
     root: basePath,
@@ -16,7 +19,7 @@ const config = defineConfig({
 
     build: {
         // output dir for production build
-        outDir: basePath,
+        outDir: '',
         emptyOutDir: true,
 
         // emit manifest so PHP can find the hashed files
@@ -49,14 +52,15 @@ const config = defineConfig({
             vue: 'vue/dist/vue.esm-bundler.js'
         }
     }
-})
+}
 
 
 class PluginMasterVueConfig {
 
-    constructor(config, basePath) {
+    constructor(config, basePath, liveReload) {
         this.viteConfig = config;
         this.basePath = basePath;
+        this.liveReload = liveReload;
     }
 
     getConfig(customConfig) {
@@ -69,18 +73,32 @@ class PluginMasterVueConfig {
                 assetFileNames: customConfig.outputDir + `assets/[name].[ext]`
             }
         }
+        let liveReloadDirs = [];
+        if(customConfig.liveReloadDir){
+            liveReloadDirs = Array.isArray(customConfig.liveReloadDir) ? customConfig.liveReloadDir : (typeof customConfig.liveReloadDir === 'string' ? [customConfig.liveReloadDir] : [])
+        }
 
         customConfig.input.forEach(item => {
             let fileName = item.outputFileName.split(".")[0];
             rollupOptions.input[fileName] = item.source
+            if(!liveReloadDirs.length){
+                let splitSOurce = item.source.split('/')
+                    splitSOurce.splice(-1)
+                liveReloadDirs.push(splitSOurce.join('/'))
+            }
         });
-
-        this.viteConfig.plugins.push(liveReload(customConfig.livereloadDir))  = rollupOptions
+       // let livereloadObject  = this.liveReload(liveReloadDirs);
+       // this.viteConfig.plugins.push(livereloadObject)
         this.viteConfig.rollupOptions  = rollupOptions
+        this.viteConfig.build.output  = this.basePath+customConfig.outputDir
+        if(customConfig.port){
+            this.viteConfig.server.port = customConfig.port
+        }
+     console.log( this.viteConfig )
         return this.viteConfig;
     }
 
 }
 
 
-module.exports = new PluginMasterVueConfig(config, basePath)
+module.exports = defineConfig( new PluginMasterVueConfig(config, basePath, liveReload) )
