@@ -11,9 +11,10 @@ class PluginMasterBuilderConfig {
         return ReactBuilderConfig.getConfig(customConfig)
 
     }
-    
+
     vueVite(customConfig) {
         let vueViteBuilderConfig = require('./vite/VueBuilder.js')
+
         return vueViteBuilderConfig.getConfig(customConfig)
 
     }
